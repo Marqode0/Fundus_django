@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FundUs | {% block head_title %}{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'FundUsApp/css/dashboard.css' %}">
+</head>
+<body>
+    {% if messages %}
+    <div class="toast-wrapper" id="toastWrapper">
+        {% for message in messages %}
+        <div class="toast toast-{{ message.tags }}">
+            <i class="fa-solid {% if message.tags == 'success' %}fa-circle-check{% else %}fa-circle-exclamation{% endif %}"></i>
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">Fu<span>.</span></div>
+        <nav class="sidebar-nav">
+            <a href="/dashboard/" class="nav-item {% block active_dashboard %}{% endblock %}" title="Dashboard"><i class="fa-solid fa-house"></i></a>
+            <a href="/transfer/" class="nav-item {% block active_transfer %}{% endblock %}" title="Send Money"><i class="fa-solid fa-paper-plane"></i></a>
+            <a href="/deposit/" class="nav-item {% block active_deposit %}{% endblock %}" title="Deposit"><i class="fa-solid fa-arrow-down-to-line"></i></a>
+            <a href="#" class="nav-item" title="Top Up"><i class="fa-solid fa-wallet"></i></a>
+            <a href="/history/" class="nav-item {% block active_history %}{% endblock %}" title="History"><i class="fa-solid fa-clock-rotate-left"></i></a>
+            <a href="/profile/" class="nav-item {% block active_profile %}{% endblock %}" title="Profile"><i class="fa-solid fa-user"></i></a>
+<a href="#" class="nav-item" title="Settings"><i class="fa-solid fa-gear"></i></a>
+        </nav>
+        <form method="post" action="/logout/" style="margin:0;">
+            {% csrf_token %}
+            <button type="submit" class="nav-item nav-logout" title="Logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </form>
+    </aside>
+
+    <div class="dashboard-layout">
+        <header class="topbar">
+            <div class="topbar-left">
+                {% block page_title %}{% endblock %}
+            </div>
+            <div class="topbar-right">
+                <button class="icon-btn"><i class="fa-regular fa-bell"></i><span class="badge">3</span></button>
+                <a href="/profile/" class="avatar" title="My Profile">{{ request.user.first_name|first|upper }}{{ request.user.last_name|first|upper }}</a>
+            </div>
+        </header>
+
+        <main class="dashboard-main">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

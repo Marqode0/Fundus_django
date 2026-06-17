@@ -1,0 +1,29 @@
+{% if transactions %}
+    <div class="htx-list">
+        {% for tx in transactions %}
+        <div class="htx-item">
+            <div class="htx-icon {% if tx.transaction_type == 'DEPOSIT' %}credit{% else %}debit{% endif %}">
+                <i class="fa-solid {% if tx.transaction_type == 'DEPOSIT' %}fa-arrow-down{% else %}fa-arrow-up{% endif %}"></i>
+            </div>
+            <div class="htx-info">
+                <p class="htx-name">
+                    {{ tx.transaction_type|capfirst }}
+                    {% if tx.recipient_name %} → {{ tx.recipient_name }}{% endif %}
+                </p>
+                <p class="htx-date">{{ tx.timestamp|date:"M d, Y · g:i A" }}</p>
+            </div>
+            <div class="htx-right">
+                <p class="htx-amount {% if tx.transaction_type == 'DEPOSIT' %}credit{% else %}debit{% endif %}">
+                    {% if tx.transaction_type == 'DEPOSIT' %}+{% else %}-{% endif %}NGN {{ tx.amount|floatformat:2 }}
+                </p>
+                <span class="htx-status {{ tx.status|lower }}">{{ tx.status|capfirst }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="htx-empty">
+        <i class="fa-regular fa-folder-open"></i>
+        <p>No transactions found.</p>
+    </div>
+{% endif %}

@@ -1,0 +1,303 @@
+{% extends 'base_dashboard.html' %}
+
+{% block head_title %}Dashboard{% endblock %}
+
+{% block active_dashboard %}active{% endblock %}
+
+{% block page_title %}
+    <span class="greeting-time" id="greetingTime">Good morning</span>
+    <h2 class="greeting-name">{{ request.user.get_full_name|default:request.user.username }} <span class="wave">👋</span></h2>
+{% endblock %}
+
+{% block content %}
+            <!-- Balance Card -->
+            <section class="balance-section">
+                <div class="balance-card" id="balanceCard">
+                    <div class="card-glow"></div>
+                    <div class="card-top">
+                        <span class="card-label">Total Balance</span>
+                        <button class="toggle-balance" id="toggleBalance" title="Show/Hide balance">
+                            <i class="fa-regular fa-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                    <div class="card-amount" id="cardAmount">
+                        <span class="currency">NGN</span>
+                        <span class="amount" id="amountDisplay">{{ customer.accountBalance|floatformat:2 }}</span>
+                    </div>
+                    <div class="card-meta">
+                        <div class="card-detail">
+                            <span class="detail-label">Account Number</span>
+                            <span class="detail-val" id="accountNumber">
+                                {% if customer.accountNumber %}
+                                   {{ customer.accountNumber|slice:":3" }}****{{ customer.accountNumber|slice:"-4:" }}
+                                {% else %}
+                                    Generating...
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="card-detail">
+                            <span class="detail-label">Account Name</span>
+                            <span class="detail-val">{{ request.user.get_full_name|default:request.user.username }}</span>
+                        </div>
+                    </div>
+                    <div class="card-chip"><i class="fa-solid fa-microchip"></i></div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon income"><i class="fa-solid fa-arrow-trend-up"></i></div>
+                        <div>
+                            <p class="stat-label">Income</p>
+                            <p class="stat-value">NGN 0.00</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon expense"><i class="fa-solid fa-arrow-trend-down"></i></div>
+                        <div>
+                            <p class="stat-label">Expenses</p>
+                            <p class="stat-value">NGN 0.00</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon savings"><i class="fa-solid fa-piggy-bank"></i></div>
+                        <div>
+                            <p class="stat-label">Savings</p>
+                            <p class="stat-value">NGN 0.00</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="actions-section">
+                <h3 class="section-title">Quick Actions</h3>
+                <div class="actions-grid">
+                    <a href="/transfer/" class="action-btn">
+                        <div class="action-icon send"><i class="fa-solid fa-paper-plane"></i></div>
+                        <span>Send</span>
+                    </a>
+                    <a href="/deposit/" class="action-btn">
+                        <div class="action-icon deposit"><i class="fa-solid fa-arrow-down-to-line"></i></div>
+                        <span>Deposit</span>
+                    </a>
+                    <button class="action-btn" onclick="openModal('receiveModal')">
+                        <div class="action-icon deposit"><i class="fa-solid fa-arrow-down-to-line"></i></div>
+                        <span>Receive</span>
+                    </button>
+                    <a href="/withdraw/" class="action-btn">
+                        <div class="action-icon withdraw"><i class="fa-solid fa-arrow-up-from-line"></i></div>
+                        <span>Withdraw</span>
+                    </a>
+                    <a href="/history/" class="action-btn">
+                        <div class="action-icon bills"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                        <span>History</span>
+                    </a>
+                    <a href="/bills/" class="action-btn">
+                        <div class="action-icon bills"><i class="fa-solid fa-file-invoice"></i></div>
+                        <span>Pay Bills</span>
+                    </a>
+                    <a href="/airtime/" class="action-btn">
+                        <div class="action-icon airtime"><i class="fa-solid fa-mobile-screen"></i></div>
+                        <span>Airtime</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Transactions -->
+            <section class="tx-section">
+                <div class="tx-header">
+                    <h3 class="section-title">Recent Transactions</h3>
+                    <a href="/history/" class="see-all">See all <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div class="tx-list">
+                    {% if transactions %}
+                        {% for tx in transactions %}
+                        <div class="tx-item">
+                            <div class="tx-icon {% if tx.transaction_type == 'DEPOSIT' %}credit{% else %}debit{% endif %}">
+                                <i class="fa-solid {% if tx.transaction_type == 'DEPOSIT' %}fa-arrow-down{% else %}fa-arrow-up{% endif %}"></i>
+                            </div>
+                            <div class="tx-info">
+                                <p class="tx-name">
+                                    {{ tx.transaction_type|capfirst }}
+                                    {% if tx.recipient_name %} → {{ tx.recipient_name }}{% endif %}
+                                </p>
+                                <p class="tx-date">{{ tx.timestamp|date:"M d, Y · g:i A" }}</p>
+                            </div>
+                            <p class="tx-amount {% if tx.transaction_type == 'DEPOSIT' %}credit{% else %}debit{% endif %}">
+                                {% if tx.transaction_type == 'DEPOSIT' %}+{% else %}-{% endif %}NGN {{ tx.amount|floatformat:2 }}
+                            </p>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="tx-empty">
+                            <i class="fa-regular fa-folder-open"></i>
+                            <p>No transactions yet. Start by depositing funds.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
+
+            <!-- Modals -->
+            <div class="modal-overlay" id="sendModal">
+                <div class="modal">
+                    <div class="modal-header">
+                        <h3><i class="fa-solid fa-paper-plane"></i> Send Money</h3>
+                        <button onclick="closeModal('sendModal')"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <label>Recipient Account Number</label>
+                        <input type="text" placeholder="Enter 10-digit account number">
+                        <label>Bank</label>
+                        <select><option>Select bank</option><option>FundUs</option><option>GTBank</option><option>Access Bank</option><option>Zenith Bank</option></select>
+                        <label>Amount (NGN)</label>
+                        <input type="number" placeholder="0.00">
+                        <label>Narration</label>
+                        <input type="text" placeholder="What's this for?">
+                        <button class="modal-btn">Send Money</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-overlay" id="depositModal">
+                <div class="modal">
+                    <div class="modal-header">
+                        <h3><i class="fa-solid fa-arrow-down-to-line"></i> Deposit</h3>
+                        <button onclick="closeModal('depositModal')"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="modal-info">Send funds to your FundUs account number to deposit.</p>
+                        <div class="copy-block">
+                            <span id="copyAccNum">
+                                {% if customer.accountNumber %}{{ customer.accountNumber }}{% else %}0000000000{% endif %}
+                            </span>
+                            <button onclick="copyAccNum()"><i class="fa-regular fa-copy"></i></button>
+                        </div>
+                        <label>Bank Name</label>
+                        <input type="text" value="FundUs MFB" readonly>
+                        <label>Account Name</label>
+                        <input type="text" value="{{ request.user.get_full_name|default:request.user.username }}" readonly>
+                    </div>
+                </div>
+            </div>
+
+            {% comment %} <div class="modal-overlay" id="topupModal">
+                <div class="modal">
+                    <div class="modal-header">
+                        <h3><i class="fa-solid fa-wallet"></i> Top Up</h3>
+                        <button onclick="closeModal('topupModal')"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <label>Amount (NGN)</label>
+                        <input type="number" placeholder="Enter amount">
+                        <label>Payment Method</label>
+                        <select><option>Card</option><option>Bank Transfer</option><option>USSD</option></select>
+                        <button class="modal-btn">Proceed</button>
+                    </div>
+                </div>
+            </div> {% endcomment %}
+
+            {% comment %} <div class="modal-overlay" id="withdrawModal">
+                <div class="modal">
+                    <div class="modal-header">
+                        <h3><i class="fa-solid fa-arrow-up-from-line"></i> Withdraw</h3>
+                        <button onclick="closeModal('withdrawModal')"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="/process-withdrawal" style="display:grid;gap:12px;">
+                            {% csrf_token %}
+                            <label>Your Bank</label>
+                            <select name="bank" required>
+                                <option value="">Select bank</option>
+                                <option>GTBank</option>
+                                <option>Access Bank</option>
+                                <option>Zenith Bank</option>
+                                <option>UBA</option>
+                            </select>
+                            <label>Account Number</label>
+                            <input type="text" name="account_number" placeholder="Your account number" required>
+                            <label>Amount (NGN)</label>
+                            <input type="number" name="amount" step="0.01" min="1" placeholder="0.00" required>
+                            <label>Transaction PIN</label>
+                            <input type="password" name="pin" maxlength="4" inputmode="numeric" placeholder="4-digit PIN" required>
+                            <label>Narration</label>
+                            <input type="text" name="narration" placeholder="Withdrawal note">
+                            <button type="submit" class="modal-btn">Withdraw</button>
+                        </form>
+                    </div>
+                </div>
+            </div> {% endcomment %}
+
+            <div class="modal-overlay" id="receiveModal">
+                <div class="modal">
+                    <div class="modal-header">
+                        <h3><i class="fa-solid fa-arrow-down-to-line"></i> Receive Money</h3>
+                        <button onclick="closeModal('receiveModal')"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="modal-info">Share your account details below to receive money from anyone.</p>
+                        <label>Account Number</label>
+                        <div class="copy-block">
+                            <span id="receiveAccNum">{{ customer.accountNumber }}</span>
+                            <button onclick="copyReceiveNum()"><i class="fa-regular fa-copy"></i></button>
+                        </div>
+                        <label>Bank Name</label>
+                        <input type="text" value="FundUs MFB" readonly>
+                        <label>Account Name</label>
+                        <input type="text" value="{{ customer.user.get_full_name|default:request.user.username }}" readonly>
+                    </div>
+                </div>
+            </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script>
+        // Greeting by time of day
+        const hour = new Date().getHours();
+        const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+        document.getElementById('greetingTime').textContent = greet;
+
+        // Toggle balance visibility
+        let balanceVisible = true;
+        const amountDisplay = document.getElementById('amountDisplay');
+        const originalBalance = amountDisplay.textContent.trim();
+
+        document.getElementById('toggleBalance').addEventListener('click', () => {
+            balanceVisible = !balanceVisible;
+            amountDisplay.textContent = balanceVisible ? originalBalance : '••••••';
+            document.getElementById('eyeIcon').className = balanceVisible ? 'fa-regular fa-eye' : 'fa-regular fa-eye-slash';
+        });
+
+        // Modals
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', e => { if (e.target === m) closeModal(m.id); });
+        });
+
+        // Copy account number
+        function copyAccNum() {
+            const num = document.getElementById('copyAccNum').textContent.trim();
+            navigator.clipboard.writeText(num).then(() => alert('Account number copied!'));
+        }
+
+        // Auto-dismiss toast
+        setTimeout(() => {
+            const tw = document.getElementById('toastWrapper');
+            if (tw) { tw.style.opacity = '0'; tw.style.transform = 'translateY(-20px)'; setTimeout(() => tw.remove(), 400); }
+        }, 3500);
+
+        function copyReceiveNum() {
+            const num = document.getElementById('receiveAccNum').textContent.trim();
+            navigator.clipboard.writeText(num).then(() => {
+                alert('Account number copied!');
+            });
+        }
+    </script>
+{% endblock %}

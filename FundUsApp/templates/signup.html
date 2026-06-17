@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FundUs | Create Account</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'FundUsApp/css/style.css' %}">
+</head>
+<body class="auth-page">
+
+    <div>
+        <a href="/" class="auth-back">
+            <i class="fa-solid fa-arrow-left"></i> Back to home
+        </a>
+
+        <div class="auth-box">
+            <div class="auth-logo">Fund<span>Us</span></div>
+            <h2>Create your account</h2>
+            <p class="auth-sub">Free forever. No hidden charges.</p>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="bigerror-{{ message.tags }}">
+                        <i class="fa-solid {% if message.tags == 'success' %}fa-circle-check{% else %}fa-circle-exclamation{% endif %}"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post" action="/process-signup">
+                {% csrf_token %}
+                <div>
+                    <label>Full Name</label>
+                    <input type="text" name="full_name" placeholder="Jane Doe" required>
+                </div>
+
+                <div>
+                    <label>Email Address</label>
+                    <input type="email" name="email" placeholder="jane@example.com" required>
+                </div>
+
+                <div>
+                    <label>Transaction PIN</label>
+                    <input type="password" name="pin" placeholder="4-digit PIN" maxlength="4" minlength="4" required>
+                </div>
+
+                <div>
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Min. 6 characters" required>
+                </div>
+                <button type="submit" class="auth-btn">
+                    Create Free Account <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="auth-divider">or</div>
+
+            <div class="auth-footer">
+                Already have an account? <a href="/login/">Sign in here</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        setTimeout(() => {
+            document.querySelectorAll('.bigerror-success, .bigerror-error').forEach(el => {
+                el.style.transition = 'opacity 0.4s';
+                el.style.opacity = '0';
+                setTimeout(() => el.remove(), 400);
+            });
+        }, 3000);
+    </script>
+</body>
+</html>

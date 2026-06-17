@@ -1,0 +1,130 @@
+{% extends 'base_dashboard.html' %}
+
+{% block head_title %}Buy Airtime{% endblock %}
+
+{% block page_title %}
+    <a href="/dashboard/" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    <h2 class="greeting-name">Buy Airtime</h2>
+{% endblock %}
+
+{% block content %}
+<div class="transfer-layout">
+
+    <div class="transfer-form-box">
+        <div class="transfer-form-header">
+            <div class="transfer-icon-big" style="background:rgba(167,139,250,0.12);color:#a78bfa">
+                <i class="fa-solid fa-mobile-screen"></i>
+            </div>
+            <div>
+                <h3>Buy Airtime</h3>
+                <p>Top up any Nigerian phone number instantly</p>
+            </div>
+        </div>
+
+        <form method="post" action="/process-airtime">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Network</label>
+                <select name="network" required>
+                    <option value="" disabled selected>Select network</option>
+                    <option value="MTN">MTN</option>
+                    <option value="Airtel">Airtel</option>
+                    <option value="Glo">Glo</option>
+                    <option value="9mobile">9mobile</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" name="phone_number" maxlength="11" minlength="11"
+                    placeholder="08012345678" required>
+            </div>
+
+            <div class="form-group">
+                <label>Amount (NGN)</label>
+                <div class="amount-input-wrap">
+                    <span class="amount-prefix">NGN</span>
+                    <input type="number" name="amount" min="50" step="50" placeholder="0.00" required>
+                </div>
+            </div>
+
+            <!-- Quick amounts -->
+            <div class="quick-amounts">
+                <button type="button" class="qa-btn" onclick="setAmount(100)">₦100</button>
+                <button type="button" class="qa-btn" onclick="setAmount(200)">₦200</button>
+                <button type="button" class="qa-btn" onclick="setAmount(500)">₦500</button>
+                <button type="button" class="qa-btn" onclick="setAmount(1000)">₦1,000</button>
+                <button type="button" class="qa-btn" onclick="setAmount(2000)">₦2,000</button>
+            </div>
+
+            <div class="form-group">
+                <label>Transaction PIN</label>
+                <div class="pin-wrap">
+                    <input type="password" name="pin" maxlength="4" minlength="4"
+                        placeholder="Enter your 4-digit PIN" id="pinInput" required>
+                    <button type="button" class="pin-toggle" onclick="togglePin()">
+                        <i class="fa-regular fa-eye" id="pinEye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="balance-hint">
+                <i class="fa-solid fa-wallet"></i>
+                Available balance:
+                <strong>NGN {{ customer.accountBalance|floatformat:2 }}</strong>
+            </div>
+
+            <button type="submit" class="submit-btn" style="background:#a78bfa;">
+                <i class="fa-solid fa-mobile-screen"></i> Buy Airtime
+            </button>
+        </form>
+    </div>
+
+    <div class="transfer-info-box">
+        <h4>Airtime Top-up</h4>
+        <div class="info-item">
+            <div class="info-icon"><i class="fa-solid fa-bolt"></i></div>
+            <div>
+                <p class="info-title">Instant delivery</p>
+                <p class="info-desc">Airtime is credited to the number immediately.</p>
+            </div>
+        </div>
+        <div class="info-item">
+            <div class="info-icon"><i class="fa-solid fa-gift"></i></div>
+            <div>
+                <p class="info-title">Buy for others</p>
+                <p class="info-desc">Top up any number — yours or a friend's.</p>
+            </div>
+        </div>
+
+        <div class="sender-card">
+            <div class="sender-label">Paying from</div>
+            <div class="sender-name">{{ customer.user.get_full_name|default:"FundUs User" }}</div>
+            <div class="sender-acc">{{ customer.accountNumber|slice:":3" }}****{{ customer.accountNumber|slice:"-4:" }} · FundUs MFB</div>
+            <div class="sender-bal">NGN {{ customer.accountBalance|floatformat:2 }}</div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function togglePin() {
+        const input = document.getElementById('pinInput');
+        const eye = document.getElementById('pinEye');
+        if (input.type === 'password') {
+            input.type = 'text';
+            eye.className = 'fa-regular fa-eye-slash';
+        } else {
+            input.type = 'password';
+            eye.className = 'fa-regular fa-eye';
+        }
+    }
+
+    function setAmount(val) {
+        document.querySelector('input[name="amount"]').value = val;
+    }
+</script>
+{% endblock %}

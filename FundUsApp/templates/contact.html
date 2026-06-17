@@ -1,0 +1,11 @@
+<h3>Customer Account Details</h3>
+<div>
+    {% if customer %}
+        <p><strong>Account Number:</strong> {{ customer.accountNumber }}</p>
+        <p><strong>Balance:</strong> {{ customer.formatted_balance }}</p>
+        <p><strong>Customer Name:</strong> {{ customer.user.get_full_name|default:customer.user.username }}</p>
+        <p><strong>Email:</strong> {{ customer.user.email }}</p>
+    {% else %}
+        <p>No customer with ID 1 was found. Create a Customer record with ID 1 in the admin or database first.</p>
+    {% endif %}
+</div>

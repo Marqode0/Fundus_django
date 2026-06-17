@@ -1,0 +1,477 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FundUs | Smart Savings for Modern Nigerians</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'FundUsApp/css/style.css' %}">
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-inner">
+            <a href="/" class="nav-brand">Fund<span>Us</span></a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How it works</a>
+                <a href="#faq">FAQ</a>
+                <a href="/contact/">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <a href="/login/" class="btn-ghost">Sign In</a>
+                <a href="/signup/" class="btn-solid">Get Started</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <!-- Mobile menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How it works</a>
+            <a href="#faq">FAQ</a>
+            <a href="/login/">Sign In</a>
+            <a href="/signup/">Get Started</a>
+        </div>
+    </nav>
+
+    <!-- HERO CAROUSEL -->
+    <section class="hero-carousel" id="heroCarousel">
+        <div class="carousel-track" id="carouselTrack">
+
+            <!-- Slide 1 -->
+            <div class="carousel-slide slide-1">
+                <div class="slide-overlay"></div>
+                <div class="slide-content">
+                    <span class="slide-tag"><i class="fa-solid fa-bolt"></i> Nigeria's smartest savings app</span>
+                    <h1>Save more.<br>Transfer faster.<br>Stay in control.</h1>
+                    <p>FundUs helps you build wealth daily with instant transfers, auto savings, and a dashboard built for modern Nigerians.</p>
+                    <div class="slide-actions">
+                        <a href="/signup/" class="btn-hero-primary">Open Free Account <i class="fa-solid fa-arrow-right"></i></a>
+                        <a href="#how-it-works" class="btn-hero-ghost">See how it works</a>
+                    </div>
+                </div>
+                <div class="slide-card">
+                    <div class="float-card">
+                        <div class="fc-label">Total Balance</div>
+                        <div class="fc-amount">NGN 472,500<span>.00</span></div>
+                        <div class="fc-row"><span>Account</span><strong>59****7650</strong></div>
+                        <div class="fc-row"><span>Daily goal</span><strong>NGN 5,000 ✓</strong></div>
+                        <div class="fc-bar">
+                            <div class="fc-bar-fill" style="width:78%"></div>
+                        </div>
+                        <div class="fc-bar-label">78% of monthly goal</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="carousel-slide slide-2">
+                <div class="slide-overlay"></div>
+                <div class="slide-content">
+                    <span class="slide-tag"><i class="fa-solid fa-paper-plane"></i> Instant transfers</span>
+                    <h1>Send money<br>in seconds.<br>No stress.</h1>
+                    <p>Transfer funds to any Nigerian bank account instantly. No hidden fees, no delays — just fast, secure money movement.</p>
+                    <div class="slide-actions">
+                        <a href="/signup/" class="btn-hero-primary">Start Sending <i class="fa-solid fa-arrow-right"></i></a>
+                        <a href="#features" class="btn-hero-ghost">Explore features</a>
+                    </div>
+                </div>
+                <div class="slide-card">
+                    <div class="float-card dark">
+                        <div class="fc-label">Recent Transfer</div>
+                        <div class="transfer-row">
+                            <div class="transfer-avatar">AO</div>
+                            <div>
+                                <p class="transfer-name">Amara Okafor</p>
+                                <p class="transfer-bank">GTBank · 058****3421</p>
+                            </div>
+                            <div class="transfer-amt debit">-NGN 15,000</div>
+                        </div>
+                        <div class="transfer-row">
+                            <div class="transfer-avatar g">KU</div>
+                            <div>
+                                <p class="transfer-name">Kemi Uba</p>
+                                <p class="transfer-bank">Access · 044****8810</p>
+                            </div>
+                            <div class="transfer-amt credit">+NGN 32,000</div>
+                        </div>
+                        <div class="fc-badge"><i class="fa-solid fa-shield-halved"></i> End-to-end encrypted</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="carousel-slide slide-3">
+                <div class="slide-overlay"></div>
+                <div class="slide-content">
+                    <span class="slide-tag"><i class="fa-solid fa-piggy-bank"></i> Auto savings</span>
+                    <h1>Your money<br>works even<br>while you sleep.</h1>
+                    <p>Set savings goals, automate daily contributions, and watch your balance grow — FundUs does the heavy lifting for you.</p>
+                    <div class="slide-actions">
+                        <a href="/signup/" class="btn-hero-primary">Start Saving <i class="fa-solid fa-arrow-right"></i></a>
+                        <a href="#features" class="btn-hero-ghost">Learn more</a>
+                    </div>
+                </div>
+                <div class="slide-card">
+                    <div class="float-card">
+                        <div class="fc-label">Savings Goals</div>
+                        <div class="goal-item">
+                            <span>School fees</span>
+                            <div class="goal-bar"><div style="width:65%;background:#c8f060"></div></div>
+                            <span class="goal-pct">65%</span>
+                        </div>
+                        <div class="goal-item">
+                            <span>New laptop</span>
+                            <div class="goal-bar"><div style="width:40%;background:#7b61ff"></div></div>
+                            <span class="goal-pct">40%</span>
+                        </div>
+                        <div class="goal-item">
+                            <span>Emergency fund</span>
+                            <div class="goal-bar"><div style="width:88%;background:#06b6d4"></div></div>
+                            <span class="goal-pct">88%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carousel controls -->
+        <div class="carousel-dots" id="carouselDots">
+            <button class="dot active" onclick="goToSlide(0)"></button>
+            <button class="dot" onclick="goToSlide(1)"></button>
+            <button class="dot" onclick="goToSlide(2)"></button>
+        </div>
+        <button class="carousel-arrow prev" onclick="prevSlide()"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="carousel-arrow next" onclick="nextSlide()"><i class="fa-solid fa-chevron-right"></i></button>
+    </section>
+
+    <!-- STATS STRIP -->
+    <section class="stats-strip">
+        <div class="stats-inner">
+            <div class="stat-item">
+                <strong>50,000+</strong>
+                <span>Active users</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <strong>NGN 2M+</strong>
+                <span>Saved daily</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <strong>98%</strong>
+                <span>Happy customers</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <strong>24/7</strong>
+                <span>Support available</span>
+            </div>
+        </div>
+    </section>
+
+    <main>
+
+        <!-- FEATURES -->
+        <section id="features" class="section features-section">
+            <div class="section-head reveal">
+                <span class="section-tag">Features</span>
+                <h2>Everything you need for<br>smart money management</h2>
+                <p>Built for students, freelancers, and entrepreneurs who want real financial control.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card reveal">
+                    <div class="feature-icon" style="background:rgba(200,240,96,0.12);color:#c8f060">
+                        <i class="fa-solid fa-piggy-bank"></i>
+                    </div>
+                    <h3>Auto Savings</h3>
+                    <p>Set daily, weekly, or monthly savings targets. FundUs moves money automatically so you never forget to save.</p>
+                    <a href="/signup/" class="feature-link">Get started <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon" style="background:rgba(123,97,255,0.12);color:#7b61ff">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </div>
+                    <h3>Fast Transfers</h3>
+                    <p>Send to any Nigerian bank instantly. One tap, zero stress, real-time confirmation to your phone.</p>
+                    <a href="/signup/" class="feature-link">Get started <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon" style="background:rgba(6,182,212,0.12);color:#06b6d4">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3>Secure Login</h3>
+                    <p>PIN protection, encrypted data, and session security keep your money and information safe always.</p>
+                    <a href="/signup/" class="feature-link">Get started <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon" style="background:rgba(245,158,11,0.12);color:#f59e0b">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h3>Spending Insights</h3>
+                    <p>Visual charts of your spending habits help you understand where your money goes every month.</p>
+                    <a href="/signup/" class="feature-link">Get started <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon" style="background:rgba(248,113,113,0.12);color:#f87171">
+                        <i class="fa-solid fa-mobile-screen"></i>
+                    </div>
+                    <h3>Airtime & Bills</h3>
+                    <p>Buy airtime, pay DSTV, NEPA, and other bills directly from your FundUs wallet in seconds.</p>
+                    <a href="/signup/" class="feature-link">Get started <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon" style="background:rgba(52,211,153,0.12);color:#34d399">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <h3>Instant Alerts</h3>
+                    <p>Get notified the moment money enters or leaves your account. Never miss a transaction again.</p>
+                    <a href="/signup/" class="feature-link">Get started <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- HOW IT WORKS -->
+        <section id="how-it-works" class="section how-section">
+            <div class="section-head reveal">
+                <span class="section-tag">How it works</span>
+                <h2>Up and running in minutes</h2>
+                <p>No paperwork. No long queues. Just your phone and your goals.</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card reveal">
+                    <div class="step-num">01</div>
+                    <div class="step-icon"><i class="fa-solid fa-user-plus"></i></div>
+                    <h3>Create your account</h3>
+                    <p>Sign up with your name, email, and a secure password. Your FundUs account number is generated instantly.</p>
+                </div>
+                <div class="step-arrow reveal"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="step-card reveal">
+                    <div class="step-num">02</div>
+                    <div class="step-icon"><i class="fa-solid fa-wallet"></i></div>
+                    <h3>Fund your wallet</h3>
+                    <p>Top up your balance via bank transfer or mobile deposit. Your funds reflect in real time.</p>
+                </div>
+                <div class="step-arrow reveal"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="step-card reveal">
+                    <div class="step-num">03</div>
+                    <div class="step-icon"><i class="fa-solid fa-chart-line"></i></div>
+                    <h3>Save, spend & grow</h3>
+                    <p>Set savings goals, send money, pay bills, and watch your financial life come together in one place.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TESTIMONIALS -->
+        <section class="section testimonials-section">
+            <div class="section-head reveal">
+                <span class="section-tag">Testimonials</span>
+                <h2>Nigerians who trust FundUs</h2>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testi-card reveal">
+                    <div class="testi-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                    <p>"FundUs helped me save for my school fees faster than I expected. The app is simple, clean, and very secure."</p>
+                    <div class="testi-author">
+                        <div class="testi-avatar" style="background:#c8f060;color:#0a0c10">AO</div>
+                        <div><strong>Ada Okonkwo</strong><span>Student, Enugu</span></div>
+                    </div>
+                </div>
+                <div class="testi-card reveal">
+                    <div class="testi-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                    <p>"I can now send money to my family in the village instantly. The transfer experience is smooth and reliable every time."</p>
+                    <div class="testi-author">
+                        <div class="testi-avatar" style="background:#7b61ff;color:#fff">KE</div>
+                        <div><strong>Kelechi Eze</strong><span>Freelancer, Lagos</span></div>
+                    </div>
+                </div>
+                <div class="testi-card reveal">
+                    <div class="testi-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                    <p>"The dashboard is beautiful and shows everything clearly. I love how my full account number is hidden automatically."</p>
+                    <div class="testi-author">
+                        <div class="testi-avatar" style="background:#06b6d4;color:#fff">DA</div>
+                        <div><strong>Daniel Adeyemi</strong><span>Business owner, Abuja</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ ACCORDION -->
+        <section id="faq" class="section faq-section">
+            <div class="section-head reveal">
+                <span class="section-tag">FAQ</span>
+                <h2>Questions? We have answers.</h2>
+                <p>Everything you need to know about FundUs before you sign up.</p>
+            </div>
+            <div class="accordion reveal" id="accordion">
+
+                <div class="accordion-item">
+                    <button class="accordion-btn" onclick="toggleAccordion(this)">
+                        <span>Is FundUs free to use?</span>
+                        <i class="fa-solid fa-plus accordion-icon"></i>
+                    </button>
+                    <div class="accordion-body">
+                        <p>Yes! Creating a FundUs account is completely free. We charge no monthly fees or maintenance costs. Small transaction fees may apply for transfers to other banks, which are always shown clearly before you confirm.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-btn" onclick="toggleAccordion(this)">
+                        <span>How secure is my money on FundUs?</span>
+                        <i class="fa-solid fa-plus accordion-icon"></i>
+                    </button>
+                    <div class="accordion-body">
+                        <p>Your funds and data are protected with bank-grade encryption, PIN authentication, and real-time fraud monitoring. We never store your full account details in plain text, and all sessions are automatically secured.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-btn" onclick="toggleAccordion(this)">
+                        <span>How long do transfers take?</span>
+                        <i class="fa-solid fa-plus accordion-icon"></i>
+                    </button>
+                    <div class="accordion-body">
+                        <p>Transfers between FundUs accounts are instant — 0 seconds. Transfers to other Nigerian banks (GTBank, Access, Zenith, UBA, etc.) typically complete within 30 seconds, though network conditions can occasionally affect this.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-btn" onclick="toggleAccordion(this)">
+                        <span>Can I use FundUs without a BVN?</span>
+                        <i class="fa-solid fa-plus accordion-icon"></i>
+                    </button>
+                    <div class="accordion-body">
+                        <p>You can sign up and explore FundUs without a BVN, but certain features like high-value transfers and full account verification will require your BVN as required by CBN regulations. Adding your BVN also increases your transaction limits.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-btn" onclick="toggleAccordion(this)">
+                        <span>What happens if I forget my PIN?</span>
+                        <i class="fa-solid fa-plus accordion-icon"></i>
+                    </button>
+                    <div class="accordion-body">
+                        <p>You can reset your PIN at any time by verifying your email address and going through our secure identity check. The process takes under 2 minutes and your account remains protected throughout.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-btn" onclick="toggleAccordion(this)">
+                        <span>Does FundUs work for business accounts?</span>
+                        <i class="fa-solid fa-plus accordion-icon"></i>
+                    </button>
+                    <div class="accordion-body">
+                        <p>Currently FundUs is optimized for personal use. Business account features — including bulk payments, invoicing, and team access — are on our roadmap and coming soon. Sign up to be notified when they launch.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- CTA BANNER -->
+        <section class="cta-section reveal">
+            <div class="cta-inner">
+                <div class="cta-glow"></div>
+                <span class="section-tag">Get started today</span>
+                <h2>Your smarter financial life<br>starts with one tap.</h2>
+                <p>Join thousands of Nigerians already saving, sending, and growing with FundUs.</p>
+                <div class="cta-actions">
+                    <a href="/signup/" class="btn-solid large">Create Free Account <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="/login/" class="btn-ghost-dark large">Sign In</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <a href="/" class="nav-brand">Fund<span>Us</span></a>
+                <p>A savings-first platform designed for modern Nigerians. Save securely, send instantly, and stay in control of your money every day.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Product</h4>
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How it works</a>
+                <a href="#faq">FAQ</a>
+                <a href="/signup/">Sign Up</a>
+            </div>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <a href="/about/">About us</a>
+                <a href="/contact/">Contact</a>
+                <a href="#">Careers</a>
+                <a href="#">Blog</a>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <p><i class="fa-solid fa-envelope"></i> support@fundus.ng</p>
+                <p><i class="fa-solid fa-phone"></i> +234 800 123 4567</p>
+                <p><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 FundUs. All rights reserved.</p>
+            <div class="footer-legal">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ── NAVBAR SCROLL ──────────────────────────────
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+        });
+
+        // ── MOBILE MENU ────────────────────────────────
+        document.getElementById('navToggle').addEventListener('click', () => {
+            document.getElementById('mobileMenu').classList.toggle('open');
+        });
+
+        // ── CAROUSEL ───────────────────────────────────
+        let currentSlide = 0;
+        const totalSlides = 3;
+        let autoSlide = setInterval(() => nextSlide(), 5000);
+
+        function goToSlide(n) {
+            currentSlide = n;
+            document.getElementById('carouselTrack').style.transform = `translateX(-${n * 100}%)`;
+            document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === n));
+            resetAuto();
+        }
+        function nextSlide() { goToSlide((currentSlide + 1) % totalSlides); }
+        function prevSlide() { goToSlide((currentSlide - 1 + totalSlides) % totalSlides); }
+        function resetAuto() { clearInterval(autoSlide); autoSlide = setInterval(() => nextSlide(), 5000); }
+
+        // ── ACCORDION ──────────────────────────────────
+        function toggleAccordion(btn) {
+            const item = btn.closest('.accordion-item');
+            const isOpen = item.classList.contains('open');
+            document.querySelectorAll('.accordion-item.open').forEach(i => i.classList.remove('open'));
+            if (!isOpen) item.classList.add('open');
+        }
+
+        // ── SCROLL REVEAL ──────────────────────────────
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

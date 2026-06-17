@@ -1,0 +1,157 @@
+{% extends 'base_dashboard.html' %}
+
+{% block head_title %}Pay Bills{% endblock %}
+
+{% block page_title %}
+    <a href="/dashboard/" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    <h2 class="greeting-name">Pay Bills</h2>
+{% endblock %}
+
+{% block content %}
+<div class="transfer-layout">
+
+    <div class="transfer-form-box">
+        <div class="transfer-form-header">
+            <div class="transfer-icon-big" style="background:rgba(52,211,153,0.12);color:#34d399">
+                <i class="fa-solid fa-file-invoice"></i>
+            </div>
+            <div>
+                <h3>Pay a Bill</h3>
+                <p>Electricity, TV subscriptions, internet & more</p>
+            </div>
+        </div>
+
+        <form method="post" action="/process-bill">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Bill Type</label>
+                <select name="bill_type" id="billType" required onchange="updateBillFields()">
+                    <option value="" disabled selected>Select bill type</option>
+                    <option value="Electricity">Electricity (PHCN)</option>
+                    <option value="DSTV">DSTV Subscription</option>
+                    <option value="GOTV">GOTV Subscription</option>
+                    <option value="Startimes">Startimes Subscription</option>
+                    <option value="Internet">Internet (Spectranet/Smile)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label id="meterLabel">Meter / Smartcard / Account Number</label>
+                <input type="text" name="meter_number" placeholder="Enter number" required>
+            </div>
+
+            <div class="form-group">
+                <label>Provider</label>
+                <select name="provider" id="providerSelect" required>
+                    <option value="" disabled selected>Select bill type first</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Amount (NGN)</label>
+                <div class="amount-input-wrap">
+                    <span class="amount-prefix">NGN</span>
+                    <input type="number" name="amount" min="1" step="0.01" placeholder="0.00" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Transaction PIN</label>
+                <div class="pin-wrap">
+                    <input type="password" name="pin" maxlength="4" minlength="4"
+                        placeholder="Enter your 4-digit PIN" id="pinInput" required>
+                    <button type="button" class="pin-toggle" onclick="togglePin()">
+                        <i class="fa-regular fa-eye" id="pinEye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="balance-hint">
+                <i class="fa-solid fa-wallet"></i>
+                Available balance:
+                <strong>NGN {{ customer.accountBalance|floatformat:2 }}</strong>
+            </div>
+
+            <button type="submit" class="submit-btn" style="background:#34d399;color:#0a0c10;">
+                <i class="fa-solid fa-file-invoice"></i> Pay Bill
+            </button>
+        </form>
+    </div>
+
+    <div class="transfer-info-box">
+        <h4>Why pay with FundUs?</h4>
+        <div class="info-item">
+            <div class="info-icon"><i class="fa-solid fa-bolt"></i></div>
+            <div>
+                <p class="info-title">Instant confirmation</p>
+                <p class="info-desc">Your subscription or meter activates immediately.</p>
+            </div>
+        </div>
+        <div class="info-item">
+            <div class="info-icon"><i class="fa-solid fa-receipt"></i></div>
+            <div>
+                <p class="info-title">Digital receipts</p>
+                <p class="info-desc">Every payment is recorded in your transaction history.</p>
+            </div>
+        </div>
+
+        <div class="sender-card">
+            <div class="sender-label">Paying from</div>
+            <div class="sender-name">{{ customer.user.get_full_name|default:"FundUs User" }}</div>
+            <div class="sender-acc">{{ customer.accountNumber|slice:":3" }}****{{ customer.accountNumber|slice:"-4:" }} · FundUs MFB</div>
+            <div class="sender-bal">NGN {{ customer.accountBalance|floatformat:2 }}</div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function togglePin() {
+        const input = document.getElementById('pinInput');
+        const eye = document.getElementById('pinEye');
+        if (input.type === 'password') {
+            input.type = 'text';
+            eye.className = 'fa-regular fa-eye-slash';
+        } else {
+            input.type = 'password';
+            eye.className = 'fa-regular fa-eye';
+        }
+    }
+
+    const providers = {
+        'Electricity': ['Eko Electric (EKEDC)', 'Ikeja Electric (IKEDC)', 'Abuja Electric (AEDC)', 'Port Harcourt Electric'],
+        'DSTV': ['DSTV Compact', 'DSTV Compact Plus', 'DSTV Premium'],
+        'GOTV': ['GOTV Max', 'GOTV Jolli', 'GOTV Jinja'],
+        'Startimes': ['Startimes Basic', 'Startimes Classic', 'Startimes Super'],
+        'Internet': ['Spectranet', 'Smile Network', 'Swift Network']
+    };
+
+    const labels = {
+        'Electricity': 'Meter Number',
+        'DSTV': 'Smartcard Number',
+        'GOTV': 'Smartcard Number',
+        'Startimes': 'Smartcard Number',
+        'Internet': 'Account / Device Number'
+    };
+
+    function updateBillFields() {
+        const billType = document.getElementById('billType').value;
+        const providerSelect = document.getElementById('providerSelect');
+        const meterLabel = document.getElementById('meterLabel');
+
+        providerSelect.innerHTML = '';
+        if (providers[billType]) {
+            providers[billType].forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p;
+                opt.textContent = p;
+                providerSelect.appendChild(opt);
+            });
+            meterLabel.textContent = labels[billType];
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'base_dashboard.html' %}
+
+{% block head_title %}Transaction Receipt{% endblock %}
+
+{% block active_transfer %}active{% endblock %}
+
+{% block page_title %}
+    <a href="/dashboard/" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Dashboard</a>
+    <h2 class="greeting-name">{{ transaction.transaction_type|title }} Receipt</h2>
+{% endblock %}
+
+{% block content %}
+            <div class="receipt-wrapper">
+
+                <div class="receipt-box">
+                    <!-- Status -->
+                    <div class="receipt-status {% if transaction.status == 'SUCCESS' %}success{% else %}failed{% endif %}">
+                        <div class="receipt-status-icon">
+                            <i class="fa-solid {% if transaction.status == 'SUCCESS' %}fa-circle-check{% else %}fa-circle-xmark{% endif %}"></i>
+                        </div>
+                        <h3>{% if transaction.status == 'SUCCESS' %}{{ transaction.transaction_type|title }} Successful{% else %}{{ transaction.transaction_type|title }} Failed{% endif %}</h3>
+                        <p>{% if transaction.status == 'SUCCESS' %}The transaction has been recorded successfully.{% else %}Something went wrong{% endif %}</p>
+                    </div>
+
+                    <!-- Amount -->
+                    <div class="receipt-amount">
+                        <span class="receipt-currency">NGN</span>
+                        <span class="receipt-value">{{ transaction.amount|floatformat:2 }}</span>
+                    </div>
+
+                    <!-- Details -->
+                    <div class="receipt-details">
+                        <div class="receipt-row">
+                            <span>Recipient</span>
+                            <strong>{{ transaction.recipient_name }}</strong>
+                        </div>
+                        <div class="receipt-row">
+                            <span>Account Number</span>
+                            <strong>{{ transaction.recipient_account }}</strong>
+                        </div>
+                        <div class="receipt-row">
+                            <span>Bank</span>
+                            <strong>{{ bank }}</strong>
+                        </div>
+                        <div class="receipt-row">
+                            <span>Narration</span>
+                            <strong>{{ narration|default:"No narration" }}</strong>
+                        </div>
+                        <div class="receipt-row">
+                            <span>Date & Time</span>
+                            <strong>{{ transaction.timestamp|date:"M d, Y · g:i A" }}</strong>
+                        </div>
+                        <div class="receipt-row">
+                            <span>Status</span>
+                            <strong class="status-badge {% if transaction.status == 'SUCCESS' %}success{% else %}failed{% endif %}">
+                                {{ transaction.status }}
+                            </strong>
+                        </div>
+                        <div class="receipt-row highlight">
+                            <span>Balance After</span>
+                            <strong>NGN {{ transaction.balance_after|floatformat:2 }}</strong>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="receipt-actions">
+                        <a href="{% if transaction.transaction_type == 'DEPOSIT' %}/deposit/{% else %}/transfer/{% endif %}" class="receipt-btn secondary">
+                            <i class="fa-solid {% if transaction.transaction_type == 'DEPOSIT' %}fa-arrow-down-to-line{% else %}fa-paper-plane{% endif %}"></i> {% if transaction.transaction_type == 'DEPOSIT' %}Deposit Again{% else %}Send Again{% endif %}
+                        </a>
+                        <a href="/dashboard/" class="receipt-btn primary">
+                            <i class="fa-solid fa-house"></i> Go to Dashboard
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+{% endblock %}

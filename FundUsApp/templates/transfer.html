@@ -1,0 +1,205 @@
+{% extends 'base_dashboard.html' %}
+
+{% block head_title %}Send Money{% endblock %}
+
+{% block active_transfer %}active{% endblock %}
+
+{% block page_title %}
+    <a href="/dashboard/" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    <h2 class="greeting-name">Send Money</h2>
+{% endblock %}
+
+{% block content %}
+            <div class="transfer-layout">
+
+                <!-- Left: Form -->
+                <div class="transfer-form-box">
+                    <div class="transfer-form-header">
+                        <div class="transfer-icon-big"><i class="fa-solid fa-paper-plane"></i></div>
+                        <div>
+                            <h3>New Transfer</h3>
+                            <p>Send money to any Nigerian bank account</p>
+                        </div>
+                    </div>
+
+                    <form method="post" action="/process-transfer" id="transferForm">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label>Recipient Account Number</label>
+                            <input type="text" name="recipient_account" maxlength="10" minlength="10"
+                                placeholder="Enter 10-digit account number" id="accountNumberInput"
+                                value="{{ request.POST.recipient_account }}" required>
+                            <div id="accountVerifyResult"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Bank</label>
+                            <select name="bank" required>
+                                <option value="" disabled selected>Select bank</option>
+                                <option value="FundUs MFB">FundUs MFB</option>
+                                <option value="GTBank">GTBank</option>
+                                <option value="Access Bank">Access Bank</option>
+                                <option value="Zenith Bank">Zenith Bank</option>
+                                <option value="UBA">UBA</option>
+                                <option value="First Bank">First Bank</option>
+                                <option value="Fidelity Bank">Fidelity Bank</option>
+                                <option value="Sterling Bank">Sterling Bank</option>
+                                <option value="Kuda Bank">Kuda Bank</option>
+                                <option value="Opay">Opay</option>
+                                <option value="Moniepoint">Moniepoint</option>
+                                <option value="Palmpay">Palmpay</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Recipient Name</label>
+                            <input type="text" name="recipient_name" id="recipientNameInput"
+                                placeholder="Will auto-fill once account is verified"
+                                value="{{ request.POST.recipient_name }}" readonly required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Amount (NGN)</label>
+                            <div class="amount-input-wrap">
+                                <span class="amount-prefix">NGN</span>
+                                <input type="number" name="amount" min="1"
+                                    placeholder="0.00" step="0.01"
+                                    value="{{ request.POST.amount }}" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Narration <span class="optional">(optional)</span></label>
+                            <input type="text" name="narration"
+                                placeholder="What is this transfer for?"
+                                value="{{ request.POST.narration }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Transaction PIN</label>
+                            <div class="pin-wrap">
+                                <input type="password" name="pin" maxlength="4" minlength="4"
+                                    placeholder="Enter your 4-digit PIN" id="pinInput" required>
+                                <button type="button" class="pin-toggle" onclick="togglePin()">
+                                    <i class="fa-regular fa-eye" id="pinEye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Balance display -->
+                        <div class="balance-hint">
+                            <i class="fa-solid fa-wallet"></i>
+                            Available balance:
+                            <strong>NGN {{ customer.accountBalance|floatformat:2 }}</strong>
+                        </div>
+
+                        <button type="submit" class="submit-btn" id="submitBtn" disabled>
+                            <i class="fa-solid fa-paper-plane"></i> Send Money
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Right: Info -->
+                <div class="transfer-info-box">
+                    <h4>Transfer Information</h4>
+
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa-solid fa-bolt"></i></div>
+                        <div>
+                            <p class="info-title">Instant transfers</p>
+                            <p class="info-desc">FundUs-to-FundUs transfers arrive in 0 seconds.</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa-solid fa-clock"></i></div>
+                        <div>
+                            <p class="info-title">Other banks</p>
+                            <p class="info-desc">Transfers to other banks arrive within 30 seconds.</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div>
+                            <p class="info-title">Secure & encrypted</p>
+                            <p class="info-desc">All transfers are protected with end-to-end encryption.</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa-solid fa-circle-info"></i></div>
+                        <div>
+                            <p class="info-title">Daily limit</p>
+                            <p class="info-desc">Default daily transfer limit is NGN 200,000.</p>
+                        </div>
+                    </div>
+
+                    <!-- Sender card -->
+                    <div class="sender-card">
+                        <div class="sender-label">Sending from</div>
+                        <div class="sender-name">{{ customer.user.get_full_name|default:customer.user.username }}</div>
+                        <div class="sender-acc">{{ customer.accountNumber|slice:":3" }}****{{ customer.accountNumber|slice:"-4:" }} · FundUs MFB</div>
+                        <div class="sender-bal">NGN {{ customer.accountBalance|floatformat:2 }}</div>
+                    </div>
+                </div>
+
+            </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script>
+        function togglePin() {
+            const input = document.getElementById('pinInput');
+            const eye = document.getElementById('pinEye');
+            if (input.type === 'password') {
+                input.type = 'text';
+                eye.className = 'fa-regular fa-eye-slash';
+            } else {
+                input.type = 'password';
+                eye.className = 'fa-regular fa-eye';
+            }
+        }
+
+        // Auto-dismiss toast
+        setTimeout(() => {
+            const tw = document.getElementById('toastWrapper');
+            if (tw) { tw.style.opacity = '0'; tw.style.transform = 'translateY(-20px)'; setTimeout(() => tw.remove(), 400); }
+        }, 3500);
+
+        const accInput = document.getElementById('accountNumberInput');
+        const verifyResult = document.getElementById('accountVerifyResult');
+        const nameInput = document.getElementById('recipientNameInput');
+        const submitBtn = document.getElementById('submitBtn');
+        let verifyTimeout;
+
+        accInput.addEventListener('input', () => {
+            clearTimeout(verifyTimeout);
+            const value = accInput.value.trim();
+            nameInput.value = '';
+            submitBtn.disabled = true;
+            verifyResult.innerHTML = '';
+
+            if (value.length === 10) {
+                verifyResult.innerHTML = '<span class="verify-loading"><i class="fa-solid fa-spinner fa-spin"></i> Verifying...</span>';
+
+                verifyTimeout = setTimeout(() => {
+                    fetch('/verify-account/?account_number=' + value)
+                        .then(function(res) { return res.json(); })
+                        .then(function(data) {
+                            if (data.valid) {
+                                nameInput.value = data.name;
+                                verifyResult.innerHTML = '<span class="verify-success"><i class="fa-solid fa-circle-check"></i> ' + data.name + '</span>';
+                                submitBtn.disabled = false;
+                            } else {
+                                verifyResult.innerHTML = '<span class="verify-error"><i class="fa-solid fa-circle-xmark"></i> Account not found on FundUs</span>';
+                                submitBtn.disabled = true;
+                            }
+                        })
+                        .catch(function() {
+                            verifyResult.innerHTML = '<span class="verify-error"><i class="fa-solid fa-circle-xmark"></i> Verification failed</span>';
+                            submitBtn.disabled = true;
+                        });
+                }, 400);
+            }
+        });
+    </script>
+{% endblock %}

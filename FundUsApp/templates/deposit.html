@@ -1,0 +1,103 @@
+{% extends 'base_dashboard.html' %}
+
+{% block head_title %}Deposit Funds{% endblock %}
+
+{% block page_title %}
+    <a href="/dashboard/" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    <h2 class="greeting-name">Deposit Funds</h2>
+{% endblock %}
+
+{% block content %}
+<div class="transfer-layout">
+
+    <div class="transfer-form-box">
+        <div class="transfer-form-header">
+            <div class="transfer-icon-big" style="background:rgba(6,182,212,0.12);color:#06b6d4">
+                <i class="fa-solid fa-arrow-down-to-line"></i>
+            </div>
+            <div>
+                <h3>Add Money</h3>
+                <p>Fund your FundUs wallet securely via Paystack</p>
+            </div>
+        </div>
+
+        <form method="post" action="/initialize-deposit/">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Amount (NGN)</label>
+                <div class="amount-input-wrap">
+                    <span class="amount-prefix">NGN</span>
+                    <input type="number" name="amount" min="100"
+                        step="0.01" placeholder="0.00" required>
+                </div>
+            </div>
+
+            <!-- Quick amounts -->
+            <div class="quick-amounts">
+                <button type="button" class="qa-btn" onclick="setAmt(500)">₦500</button>
+                <button type="button" class="qa-btn" onclick="setAmt(1000)">₦1,000</button>
+                <button type="button" class="qa-btn" onclick="setAmt(2000)">₦2,000</button>
+                <button type="button" class="qa-btn" onclick="setAmt(5000)">₦5,000</button>
+                <button type="button" class="qa-btn" onclick="setAmt(10000)">₦10,000</button>
+            </div>
+
+            <div class="balance-hint">
+                <i class="fa-solid fa-wallet"></i>
+                Current balance:
+                <strong>NGN {{ customer.accountBalance|floatformat:2 }}</strong>
+            </div>
+
+            <button type="submit" class="submit-btn" style="background:#06b6d4;color:#0a0c10;">
+                <i class="fa-solid fa-lock"></i> Pay Securely with Paystack
+            </button>
+        </form>
+
+        <div class="deposit-note">
+            <i class="fa-solid fa-circle-info"></i>
+            You'll be redirected to Paystack's secure payment page to complete your deposit with card or bank transfer.
+        </div>
+    </div>
+
+    <div class="transfer-info-box">
+        <h4>How deposit works</h4>
+        <div class="info-item">
+            <div class="info-icon"><i class="fa-solid fa-credit-card"></i></div>
+            <div>
+                <p class="info-title">Pay with card or bank</p>
+                <p class="info-desc">Paystack accepts debit cards, bank transfers and USSD.</p>
+            </div>
+        </div>
+        <div class="info-item">
+            <div class="info-icon"><i class="fa-solid fa-bolt"></i></div>
+            <div>
+                <p class="info-title">Instant crediting</p>
+                <p class="info-desc">Your balance updates immediately after payment confirms.</p>
+            </div>
+        </div>
+        <div class="info-item">
+            <div class="info-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div>
+                <p class="info-title">Secured by Paystack</p>
+                <p class="info-desc">PCI-DSS compliant. Your card details never touch our servers.</p>
+            </div>
+        </div>
+
+        <div class="sender-card">
+            <div class="sender-label">Depositing to</div>
+            <div class="sender-name">{{ customer.user.get_full_name|default:"FundUs User" }}</div>
+            <div class="sender-acc">{{ customer.accountNumber }} · FundUs MFB</div>
+            <div class="sender-bal">NGN {{ customer.accountBalance|floatformat:2 }}</div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function setAmt(val) {
+        document.querySelector('input[name="amount"]').value = val;
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends 'base_dashboard.html' %}
+
+{% block head_title %}Transaction History{% endblock %}
+
+{% block active_history %}active{% endblock %}
+
+{% block page_title %}
+<h2 class="greeting-name">Transaction History</h2>
+{% endblock %}
+
+{% block content %}
+
+<!-- Summary Cards -->
+<div class="history-summary">
+    <div class="history-stat-card">
+        <div class="hstat-icon" style="background:rgba(74,222,128,0.12);color:#4ade80">
+            <i class="fa-solid fa-arrow-down"></i>
+        </div>
+        <div>
+            <p class="hstat-label">Total Received</p>
+            <p class="hstat-value">NGN {{ total_deposits|floatformat:2 }}</p>
+        </div>
+    </div>
+    <div class="history-stat-card">
+        <div class="hstat-icon" style="background:rgba(248,113,113,0.12);color:#f87171">
+            <i class="fa-solid fa-arrow-up"></i>
+        </div>
+        <div>
+            <p class="hstat-label">Total Sent</p>
+            <p class="hstat-value">NGN {{ total_transfers|floatformat:2 }}</p>
+        </div>
+    </div>
+    <div class="history-stat-card">
+        <div class="hstat-icon" style="background:rgba(200,240,96,0.12);color:#c8f060">
+            <i class="fa-solid fa-list"></i>
+        </div>
+        <div>
+            <p class="hstat-label">Total Transactions</p>
+            <p class="hstat-value">{{ total_count }}</p>
+        </div>
+    </div>
+    <div class="history-stat-card">
+        <div class="hstat-icon" style="background:rgba(123,97,255,0.12);color:#7b61ff">
+            <i class="fa-solid fa-wallet"></i>
+        </div>
+        <div>
+            <p class="hstat-label">Current Balance</p>
+            <p class="hstat-value">NGN {{ customer.accountBalance|floatformat:2 }}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Filter Bar -->
+<div class="history-filter-bar">
+    <form method="get" action="/history/" class="filter-form">
+        <div class="filter-group">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="search" placeholder="Search by name or type..."
+                value="{{ request.GET.search }}">
+        </div>
+        <div class="filter-group">
+            <i class="fa-solid fa-calendar"></i>
+            <input type="date" name="date_from" value="{{ request.GET.date_from }}" title="From date">
+        </div>
+        <div class="filter-group">
+            <i class="fa-solid fa-calendar-check"></i>
+            <input type="date" name="date_to" value="{{ request.GET.date_to }}" title="To date">
+        </div>
+        <button type="submit" class="filter-btn">
+            <i class="fa-solid fa-filter"></i> Filter
+        </button>
+        {% if request.GET.search or request.GET.date_from or request.GET.date_to %}
+        <a href="/history/" class="filter-clear">
+            <i class="fa-solid fa-xmark"></i> Clear
+        </a>
+        {% endif %}
+    </form>
+</div>
+
+<!-- Tabs -->
+<div class="history-tabs" id="historyTabs">
+    <button class="htab active" onclick="switchTab('all', this)">
+        All <span class="htab-count">{{ all_transactions.count }}</span>
+    </button>
+    <button class="htab" onclick="switchTab('deposit', this)">
+        Deposits <span class="htab-count">{{ deposit_transactions.count }}</span>
+    </button>
+    <button class="htab" onclick="switchTab('transfer', this)">
+        Transfers <span class="htab-count">{{ transfer_transactions.count }}</span>
+    </button>
+    <button class="htab" onclick="switchTab('withdrawal', this)">
+        Withdrawals <span class="htab-count">{{ withdrawal_transactions.count }}</span>
+    </button>
+</div>
+
+<!-- ALL -->
+<div class="htab-panel active" id="panel-all">
+    {% include 'partials/tx_list.html' with transactions=all_transactions %}
+</div>
+
+<!-- DEPOSITS -->
+<div class="htab-panel" id="panel-deposit">
+    {% include 'partials/tx_list.html' with transactions=deposit_transactions %}
+</div>
+
+<!-- TRANSFERS -->
+<div class="htab-panel" id="panel-transfer">
+    {% include 'partials/tx_list.html' with transactions=transfer_transactions %}
+</div>
+
+<!-- WITHDRAWALS -->
+<div class="htab-panel" id="panel-withdrawal">
+    {% include 'partials/tx_list.html' with transactions=withdrawal_transactions %}
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function switchTab(name, btn) {
+        // hide all panels
+        document.querySelectorAll('.htab-panel').forEach(p => p.classList.remove('active'));
+        // deactivate all tabs
+        document.querySelectorAll('.htab').forEach(t => t.classList.remove('active'));
+        // show selected
+        document.getElementById('panel-' + name).classList.add('active');
+        btn.classList.add('active');
+    }
+</script>
+{% endblock %}

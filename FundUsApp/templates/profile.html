@@ -1,0 +1,189 @@
+{% extends 'base_dashboard.html' %}
+
+{% block head_title %}My Profile{% endblock %}
+
+{% block page_title %}
+<a href="/dashboard/" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back</a>
+<h2 class="greeting-name">My Profile</h2>
+{% endblock %}
+
+{% block content %}
+<div class="profile-layout">
+
+    <!-- Left: Profile Card -->
+    <div class="profile-card-col">
+        <div class="profile-card">
+            <a href="/profile/" class="profile-avatar-big">
+                {{ customer.user.first_name|first|upper }}{{ customer.user.last_name|first|upper }}
+            </a>
+            <h3 class="profile-fullname">{{ customer.user.get_full_name|default:customer.user.username }}</h3>
+            <p class="profile-email">{{ customer.user.email }}</p>
+            <div class="profile-badge">
+                <i class="fa-solid fa-circle-check"></i> Active Account
+            </div>
+            <div class="profile-acc-box">
+                <div class="profile-acc-row">
+                    <span>Account Number</span>
+                    <strong>{{ customer.accountNumber }}</strong>
+                </div>
+                <div class="profile-acc-row">
+                    <span>Balance</span>
+                    <strong>NGN {{ customer.accountBalance|floatformat:2 }}</strong>
+                </div>
+                <div class="profile-acc-row">
+                    <span>Gender</span>
+                    <strong>{{ customer.get_gender_display }}</strong>
+                </div>
+                <div class="profile-acc-row">
+                    <span>Date of Birth</span>
+                    <strong>{{ customer.dob|date:"M d, Y"|default:"Not set" }}</strong>
+                </div>
+                <div class="profile-acc-row">
+                    <span>BVN</span>
+                    <strong>{% if customer.bvn %}****{{ customer.bvn|slice:"-4:" }}{% else %}Not set{% endif %}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right: Edit Forms -->
+    <div class="profile-forms-col">
+
+        <!-- Personal Info -->
+        <div class="profile-section-box">
+            <div class="profile-section-head">
+                <div class="profile-section-icon" style="background:rgba(200,240,96,0.12);color:#c8f060">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div>
+                    <h4>Personal Information</h4>
+                    <p>Update your name and phone number</p>
+                </div>
+            </div>
+            <form method="post" action="/profile/update-info">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" name="first_name"
+                        value="{{ customer.user.first_name }}"
+                        placeholder="First name" required>
+                </div>
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" name="last_name"
+                        value="{{ customer.user.last_name }}"
+                        placeholder="Last name" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone"
+                        value="{{ customer.phonenumber }}"
+                        placeholder="+234 800 000 0000">
+                </div>
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date" name="dob"
+                        value="{{ customer.dob|date:'Y-m-d' }}">
+                </div>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select name="gender">
+                        <option value="M" {% if customer.gender == 'M' %}selected{% endif %}>Male</option>
+                        <option value="F" {% if customer.gender == 'F' %}selected{% endif %}>Female</option>
+                        <option value="U" {% if customer.gender == 'U' %}selected{% endif %}>Prefer not to say</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fa-solid fa-floppy-disk"></i> Save Changes
+                </button>
+            </form>
+        </div>
+
+        <!-- Change Password -->
+        <div class="profile-section-box">
+            <div class="profile-section-head">
+                <div class="profile-section-icon" style="background:rgba(123,97,255,0.12);color:#7b61ff">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <div>
+                    <h4>Change Password</h4>
+                    <p>Update your login password</p>
+                </div>
+            </div>
+            <form method="post" action="/profile/update-password">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Current Password</label>
+                    <input type="password" name="current_password"
+                        placeholder="Enter current password" required>
+                </div>
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" name="new_password"
+                        placeholder="Min. 6 characters" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirm New Password</label>
+                    <input type="password" name="confirm_password"
+                        placeholder="Repeat new password" required>
+                </div>
+                <button type="submit" class="submit-btn" style="background:#7b61ff;">
+                    <i class="fa-solid fa-shield-halved"></i> Update Password
+                </button>
+            </form>
+        </div>
+
+        <!-- Change PIN -->
+        <div class="profile-section-box">
+            <div class="profile-section-head">
+                <div class="profile-section-icon" style="background:rgba(6,182,212,0.12);color:#06b6d4">
+                    <i class="fa-solid fa-hashtag"></i>
+                </div>
+                <div>
+                    <h4>Transaction PIN</h4>
+                    <p>Set or update your 4-digit transfer PIN</p>
+                </div>
+            </div>
+            <form method="post" action="/profile/update-pin">
+                {% csrf_token %}
+                {% if customer.pin %}
+                <div class="form-group">
+                    <label>Current PIN</label>
+                    <input type="password" name="current_pin"
+                        maxlength="4" placeholder="Enter current PIN">
+                </div>
+                {% endif %}
+                <div class="form-group">
+                    <label>New PIN</label>
+                    <input type="password" name="new_pin"
+                        maxlength="4" minlength="4"
+                        placeholder="Enter 4-digit PIN" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirm New PIN</label>
+                    <input type="password" name="confirm_pin"
+                        maxlength="4" minlength="4"
+                        placeholder="Repeat 4-digit PIN" required>
+                </div>
+                <button type="submit" class="submit-btn" style="background:#06b6d4;color:#0a0c10;">
+                    <i class="fa-solid fa-key"></i> Save PIN
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    setTimeout(() => {
+        const tw = document.getElementById('toastWrapper');
+        if (tw) {
+            tw.style.opacity = '0';
+            tw.style.transform = 'translateY(-20px)';
+            setTimeout(() => tw.remove(), 400);
+        }
+    }, 3500);
+</script>
+{% endblock %}
